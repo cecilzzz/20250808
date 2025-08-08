@@ -1,0 +1,97 @@
+{
+  "lastUpdate": "2025-08-08T18:21:33.052Z",
+  "totalProducts": 78,
+  "totalSeries": 15,
+  "series": [
+    {
+      "key": "exciting-macaron",
+      "productCount": 7,
+      "fileName": "exciting-macaron.json",
+      "lastModified": "2025-08-08T18:21:33.052Z"
+    },
+    {
+      "key": "have-a-seat",
+      "productCount": 7,
+      "fileName": "have-a-seat.json",
+      "lastModified": "2025-08-08T18:21:33.052Z"
+    },
+    {
+      "key": "big-into-energy",
+      "productCount": 6,
+      "fileName": "big-into-energy.json",
+      "lastModified": "2025-08-08T18:21:33.052Z"
+    },
+    {
+      "key": "coca-cola",
+      "productCount": 12,
+      "fileName": "coca-cola.json",
+      "lastModified": "2025-08-08T18:21:33.052Z"
+    },
+    {
+      "key": "fall-in-wild",
+      "productCount": 2,
+      "fileName": "fall-in-wild.json",
+      "lastModified": "2025-08-08T18:21:33.052Z"
+    },
+    {
+      "key": "artistic-quest",
+      "productCount": 1,
+      "fileName": "artistic-quest.json",
+      "lastModified": "2025-08-08T18:21:33.052Z"
+    },
+    {
+      "key": "original-classic",
+      "productCount": 7,
+      "fileName": "original-classic.json",
+      "lastModified": "2025-08-08T18:21:33.052Z"
+    },
+    {
+      "key": "time-to-chill-series",
+      "productCount": 1,
+      "fileName": "time-to-chill-series.json",
+      "lastModified": "2025-08-08T18:21:33.052Z"
+    },
+    {
+      "key": "dress-be-latte-series",
+      "productCount": 1,
+      "fileName": "dress-be-latte-series.json",
+      "lastModified": "2025-08-08T18:21:33.052Z"
+    },
+    {
+      "key": "flip-with-me-series",
+      "productCount": 1,
+      "fileName": "flip-with-me-series.json",
+      "lastModified": "2025-08-08T18:21:33.052Z"
+    },
+    {
+      "key": "tasty-macarons-series",
+      "productCount": 6,
+      "fileName": "tasty-macarons-series.json",
+      "lastModified": "2025-08-08T18:21:33.052Z"
+    },
+    {
+      "key": "almost-hidden-series",
+      "productCount": 9,
+      "fileName": "almost-hidden-series.json",
+      "lastModified": "2025-08-08T18:21:33.052Z"
+    },
+    {
+      "key": "wacky-mart-series",
+      "productCount": 9,
+      "fileName": "wacky-mart-series.json",
+      "lastModified": "2025-08-08T18:21:33.052Z"
+    },
+    {
+      "key": "let-s-checkmate-series",
+      "productCount": 7,
+      "fileName": "let-s-checkmate-series.json",
+      "lastModified": "2025-08-08T18:21:33.052Z"
+    },
+    {
+      "key": "massive-into-energy-series",
+      "productCount": 2,
+      "fileName": "massive-into-energy-series.json",
+      "lastModified": "2025-08-08T18:21:33.052Z"
+    }
+  ]
+}

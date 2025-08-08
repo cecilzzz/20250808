@@ -8,7 +8,15 @@
     "dev:debug": "next dev --port 8080",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "data:split": "tsx scripts/data-management.ts split",
+    "data:split:preview": "tsx scripts/data-management.ts split --preview",
+    "data:add-field": "tsx scripts/data-management.ts add-field",
+    "data:rename-field": "tsx scripts/data-management.ts rename-field",
+    "data:remove-field": "tsx scripts/data-management.ts remove-field",
+    "data:update-field": "tsx scripts/data-management.ts update-field",
+    "data:analyze": "tsx scripts/data-management.ts analyze",
+    "data:examples": "tsx scripts/data-management.ts examples"
   },
   "dependencies": {
     "@heroicons/react": "^2.2.0",
@@ -20,12 +28,16 @@
   "devDependencies": {
     "@eslint/eslintrc": "^3",
     "@tailwindcss/postcss": "^4",
+    "@types/glob": "^9.0.0",
     "@types/node": "^20",
     "@types/react": "^19.1.9",
     "@types/react-dom": "^19.1.7",
+    "commander": "^14.0.0",
     "eslint": "^9",
     "eslint-config-next": "15.4.6",
+    "glob": "^11.0.3",
     "tailwindcss": "^4",
+    "tsx": "^4.20.3",
     "typescript": "^5"
   }
 }

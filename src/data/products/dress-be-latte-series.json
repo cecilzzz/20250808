@@ -1,0 +1,18 @@
+[
+  {
+    "id": "labubu-PPMT-2310-0007",
+    "name": "拿鐵時裝 - Dress Be Latte",
+    "nameEn": "Dress Be Latte",
+    "series": "Dress Be Latte Series",
+    "rarityLevel": "normal",
+    "currentPrice": 650,
+    "originalPrice": 580,
+    "mainColor": "#DEB887",
+    "imageUrl": "https://toysez.com/cdn/shop/files/11_1_0b9b1293-e5d3-401d-a64e-267da276c777.jpg?v=1722278703",
+    "releaseStatus": "active",
+    "releaseDate": "2023-10-01",
+    "appearanceRate": "single",
+    "createdAt": "2023-10-01T00:00:00Z",
+    "updatedAt": "2024-08-08T00:00:00Z"
+  }
+]
