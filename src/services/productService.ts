@@ -18,7 +18,7 @@
  * 💡 比喻：就像是「產品資料管理員」，負責整理、查找和提供產品信息
  */
 
-import productsData from '@/data/products.json'
+import { ProductLoader } from '@/data/productLoader'
 import type {
   Product,
   ProductListRequest,
@@ -47,8 +47,9 @@ export class ProductService {
     // 🔄 【模擬API延遲】提供真實的API體驗
     await new Promise(resolve => setTimeout(resolve, 100))
 
-    // 📋 【獲取所有產品】從JSON數據開始
-    let filteredProducts = [...productsData] as Product[]
+    // 📋 【獲取所有產品】從新的數據加載器開始
+    const allProducts = await ProductLoader.loadAllProducts()
+    let filteredProducts = [...allProducts]
 
     // 🔍 【文本搜索】按產品名稱搜索（支持中英文）
     if (search.trim()) {
@@ -134,17 +135,20 @@ export class ProductService {
     // 🔄 【模擬API延遲】提供真實的API體驗
     await new Promise(resolve => setTimeout(resolve, 50))
 
+    // 📋 【獲取所有產品】從數據加載器獲取
+    const allProducts = await ProductLoader.loadAllProducts()
+
     // 🔍 【查找產品】根據 ID 查找產品
-    const product = productsData.find(p => p.id === id) as Product | undefined
+    const product = allProducts.find(p => p.id === id)
 
     if (!product) {
       throw new Error('找不到指定的產品')
     }
 
     // 🔄 【獲取相關產品】同系列的其他產品（排除當前產品）
-    const relatedProducts = productsData
+    const relatedProducts = allProducts
       .filter(p => p.series === product.series && p.id !== id)
-      .slice(0, 4) as Product[]
+      .slice(0, 4)
 
     return {
       product,
@@ -157,9 +161,8 @@ export class ProductService {
     // 🔄 【模擬API延遲】
     await new Promise(resolve => setTimeout(resolve, 20))
 
-    // 🔄 【去重處理】移除重複的系列名稱
-    const uniqueSeries = Array.from(new Set(productsData.map(product => product.series)))
-    return uniqueSeries.sort()
+    // 🔄 【使用數據加載器】獲取所有系列
+    return await ProductLoader.getAllSeries()
   }
 
   // 💰 【獲取價格範圍】獲取產品的最低和最高價格
@@ -167,7 +170,9 @@ export class ProductService {
     // 🔄 【模擬API延遲】
     await new Promise(resolve => setTimeout(resolve, 20))
 
-    const prices = productsData.map(product => product.currentPrice)
+    // 📋 【獲取所有產品】從數據加載器獲取
+    const allProducts = await ProductLoader.loadAllProducts()
+    const prices = allProducts.map(product => product.currentPrice)
     
     if (prices.length === 0) {
       return { min: 0, max: 1000 }
@@ -184,14 +189,17 @@ export class ProductService {
     // 🔄 【模擬API延遲】
     await new Promise(resolve => setTimeout(resolve, 30))
 
+    // 📋 【獲取所有產品】從數據加載器獲取
+    const allProducts = await ProductLoader.loadAllProducts()
+
     // 🔄 【統計處理】按稀有度和狀態分組統計
     const stats = {
-      total: productsData.length,
+      total: allProducts.length,
       byRarity: {} as Record<RarityLevel, number>,
       byStatus: {} as Record<ReleaseStatus, number>
     }
 
-    productsData.forEach(product => {
+    allProducts.forEach(product => {
       // 按稀有度統計
       stats.byRarity[product.rarityLevel as RarityLevel] = (stats.byRarity[product.rarityLevel as RarityLevel] || 0) + 1
       // 按狀態統計
