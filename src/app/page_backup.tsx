@@ -3,7 +3,6 @@
 import { useState, useEffect } from 'react'
 import Header from '@/components/Header'
 import ProductGrid from '@/components/ProductGrid'
-import SearchFilters, { SearchFiltersState } from '@/components/SearchFilters'
 import type { Product } from '@/types/database'
 
 export default function Home() {
@@ -14,46 +13,12 @@ export default function Home() {
   const [totalPages, setTotalPages] = useState(1)
   const [totalProducts, setTotalProducts] = useState(0)
 
-  const [filters, setFilters] = useState<SearchFiltersState>({
-    search: '',
-    rarity: [],
-    series: [],
-    sortBy: 'name',
-    sortOrder: 'asc'
-  })
-
-  const [availableSeries, setAvailableSeries] = useState<string[]>([])
-  const [priceRange, setPriceRange] = useState({ min: 0, max: 1000 })
-
-  const fetchProducts = async (page: number = 1, currentFilters = filters) => {
+  const fetchProducts = async (page: number = 1) => {
     try {
       setLoading(true)
       setError(null)
       
-      const params = new URLSearchParams({
-        page: page.toString(),
-        limit: '20',
-        sortBy: currentFilters.sortBy,
-        sortOrder: currentFilters.sortOrder
-      })
-
-      if (currentFilters.search) {
-        params.append('search', currentFilters.search)
-      }
-      if (currentFilters.rarity.length > 0) {
-        params.append('rarity', currentFilters.rarity.join(','))
-      }
-      if (currentFilters.series.length > 0) {
-        params.append('series', currentFilters.series.join(','))
-      }
-      if (currentFilters.minPrice !== undefined) {
-        params.append('minPrice', currentFilters.minPrice.toString())
-      }
-      if (currentFilters.maxPrice !== undefined) {
-        params.append('maxPrice', currentFilters.maxPrice.toString())
-      }
-      
-      const response = await fetch(`/api/products?${params.toString()}`)
+      const response = await fetch(`/api/products?page=${page}&limit=20`)
       const result = await response.json()
       
       if (!result.success) {
@@ -73,50 +38,13 @@ export default function Home() {
     }
   }
 
-  const fetchSeries = async () => {
-    try {
-      const response = await fetch('/api/products/series')
-      const result = await response.json()
-      
-      if (result.success) {
-        setAvailableSeries(result.data)
-      }
-    } catch (err) {
-      console.error('獲取系列列表失敗:', err)
-    }
-  }
-
-  const fetchPriceRange = async () => {
-    try {
-      const response = await fetch('/api/products/price-range')
-      const result = await response.json()
-      
-      if (result.success) {
-        setPriceRange(result.data)
-      }
-    } catch (err) {
-      console.error('獲取價格範圍失敗:', err)
-    }
-  }
-
   useEffect(() => {
     fetchProducts()
-    fetchSeries()
-    fetchPriceRange()
   }, [])
-
-  useEffect(() => {
-    fetchProducts(1, filters)
-    setCurrentPage(1)
-  }, [filters])
-
-  const handleFiltersChange = (newFilters: SearchFiltersState) => {
-    setFilters(newFilters)
-  }
 
   const handlePageChange = (page: number) => {
     if (page >= 1 && page <= totalPages) {
-      fetchProducts(page, filters)
+      fetchProducts(page)
     }
   }
 
@@ -138,13 +66,6 @@ export default function Home() {
             )}
           </p>
         </div>
-
-        <SearchFilters
-          filters={filters}
-          onFiltersChange={handleFiltersChange}
-          availableSeries={availableSeries}
-          priceRange={priceRange}
-        />
 
         <ProductGrid 
           products={products}
