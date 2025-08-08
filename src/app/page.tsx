@@ -1,130 +1,62 @@
+/**
+ * 首頁組件 - Labubu 收藏系統主頁面
+ *
+ * 🎯 這個頁面的工作：
+ * 組織和布局產品瀏覽相關的所有UI組件
+ *
+ * 🚫 這個頁面不做什麼：
+ * - 不處理數據獲取和管理（由 useProducts Hook 處理）
+ * - 不處理業務邏輯（由 Hook 和 Service 處理）
+ * - 不處理複雜狀態（委託給專門的 Hook）
+ *
+ * ✅ 只負責：
+ * - 組件佈局和結構
+ * - UI組件的組合和協調
+ * - 將Hook數據傳遞給子組件
+ * - 提供頁面級別的視覺結構
+ *
+ * 💡 比喻：就像是「展廳設計師」，只負責安排展品的佈局和展示方式
+ */
+
 'use client'
 
-import { useState, useEffect } from 'react'
 import Header from '@/components/Header'
 import ProductGrid from '@/components/ProductGrid'
-import SearchFilters, { SearchFiltersState } from '@/components/SearchFilters'
-import type { Product } from '@/types/database'
+import SearchFilters from '@/components/SearchFilters'
+import { useProducts } from '@/hooks/useProducts'
 
-export default function Home() {
-  const [products, setProducts] = useState<Product[]>([])
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
-  const [currentPage, setCurrentPage] = useState(1)
-  const [totalPages, setTotalPages] = useState(1)
-  const [totalProducts, setTotalProducts] = useState(0)
-
-  const [filters, setFilters] = useState<SearchFiltersState>({
-    search: '',
-    rarity: [],
-    series: [],
-    sortBy: 'name',
-    sortOrder: 'asc'
-  })
-
-  const [availableSeries, setAvailableSeries] = useState<string[]>([])
-  const [priceRange, setPriceRange] = useState({ min: 0, max: 1000 })
-
-  const fetchProducts = async (page: number = 1, currentFilters = filters) => {
-    try {
-      setLoading(true)
-      setError(null)
-      
-      const params = new URLSearchParams({
-        page: page.toString(),
-        limit: '20',
-        sortBy: currentFilters.sortBy,
-        sortOrder: currentFilters.sortOrder
-      })
-
-      if (currentFilters.search) {
-        params.append('search', currentFilters.search)
-      }
-      if (currentFilters.rarity.length > 0) {
-        params.append('rarity', currentFilters.rarity.join(','))
-      }
-      if (currentFilters.series.length > 0) {
-        params.append('series', currentFilters.series.join(','))
-      }
-      if (currentFilters.minPrice !== undefined) {
-        params.append('minPrice', currentFilters.minPrice.toString())
-      }
-      if (currentFilters.maxPrice !== undefined) {
-        params.append('maxPrice', currentFilters.maxPrice.toString())
-      }
-      
-      const response = await fetch(`/api/products?${params.toString()}`)
-      const result = await response.json()
-      
-      if (!result.success) {
-        throw new Error(result.error || '獲取產品列表失敗')
-      }
-      
-      setProducts(result.data.products)
-      setCurrentPage(result.data.page)
-      setTotalPages(result.data.totalPages)
-      setTotalProducts(result.data.total)
-      
-    } catch (err) {
-      console.error('載入產品失敗:', err)
-      setError(err instanceof Error ? err.message : '載入產品失敗')
-    } finally {
-      setLoading(false)
-    }
-  }
-
-  const fetchSeries = async () => {
-    try {
-      const response = await fetch('/api/products/series')
-      const result = await response.json()
-      
-      if (result.success) {
-        setAvailableSeries(result.data)
-      }
-    } catch (err) {
-      console.error('獲取系列列表失敗:', err)
-    }
-  }
-
-  const fetchPriceRange = async () => {
-    try {
-      const response = await fetch('/api/products/price-range')
-      const result = await response.json()
-      
-      if (result.success) {
-        setPriceRange(result.data)
-      }
-    } catch (err) {
-      console.error('獲取價格範圍失敗:', err)
-    }
-  }
-
-  useEffect(() => {
-    fetchProducts()
-    fetchSeries()
-    fetchPriceRange()
-  }, [])
-
-  useEffect(() => {
-    fetchProducts(1, filters)
-    setCurrentPage(1)
-  }, [filters])
-
-  const handleFiltersChange = (newFilters: SearchFiltersState) => {
-    setFilters(newFilters)
-  }
-
-  const handlePageChange = (page: number) => {
-    if (page >= 1 && page <= totalPages) {
-      fetchProducts(page, filters)
-    }
-  }
+export default function HomePage() {
+  // 🔧 【使用產品數據Hook】獲取所有產品相關數據和操作方法
+  const {
+    // 📊 數據狀態
+    products,
+    loading,
+    error,
+    
+    // 📄 分頁狀態
+    currentPage,
+    totalPages,
+    totalProducts,
+    
+    // 🎛️ 篩選器狀態
+    filters,
+    availableSeries,
+    priceRange,
+    
+    // 🔧 操作方法
+    handleFiltersChange,
+    handlePageChange
+  } = useProducts()
 
   return (
     <div className="min-h-screen bg-gray-50">
+      {/* 🎯 【頁面頭部】導航和用戶功能 */}
       <Header />
       
+      {/* 📄 【主要內容區域】產品瀏覽和篩選功能 */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        
+        {/* 🏷️ 【頁面標題區域】 */}
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-gray-900 mb-2">
             Labubu 收藏品
@@ -139,6 +71,7 @@ export default function Home() {
           </p>
         </div>
 
+        {/* 🎛️ 【篩選器區域】搜索和篩選控制 */}
         <SearchFilters
           filters={filters}
           onFiltersChange={handleFiltersChange}
@@ -146,15 +79,19 @@ export default function Home() {
           priceRange={priceRange}
         />
 
+        {/* 📋 【產品列表區域】產品網格展示 */}
         <ProductGrid 
           products={products}
           loading={loading}
           error={error}
         />
 
+        {/* 📄 【分頁導航區域】頁碼控制 */}
         {!loading && !error && totalPages > 1 && (
           <div className="mt-12 flex justify-center">
             <nav className="inline-flex rounded-md shadow-sm" aria-label="分頁導航">
+              
+              {/* ⬅️ 【上一頁按鈕】 */}
               <button
                 onClick={() => handlePageChange(currentPage - 1)}
                 disabled={currentPage <= 1}
@@ -163,6 +100,7 @@ export default function Home() {
                 上一頁
               </button>
               
+              {/* 🔢 【頁碼按鈕組】顯示最多5個頁碼 */}
               {Array.from({ length: Math.min(totalPages, 5) }, (_, i) => {
                 const page = i + 1
                 return (
@@ -180,6 +118,7 @@ export default function Home() {
                 )
               })}
               
+              {/* ➡️ 【下一頁按鈕】 */}
               <button
                 onClick={() => handlePageChange(currentPage + 1)}
                 disabled={currentPage >= totalPages}
@@ -187,9 +126,11 @@ export default function Home() {
               >
                 下一頁
               </button>
+              
             </nav>
           </div>
         )}
+        
       </main>
     </div>
   )

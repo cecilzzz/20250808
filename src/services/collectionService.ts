@@ -18,7 +18,7 @@
  * 💡 比喻：就像是「收藏管理員」，負責記錄和管理用戶的心願清單
  */
 
-import productsData from '@/data/products.json'
+import { ProductLoader } from '@/data/productLoader'
 import { supabase } from '@/lib/supabase'
 import type {
   Product,
@@ -99,9 +99,12 @@ export class CollectionService {
       const wanted: Product[] = []
       let totalValue = 0
 
+      // 📋 【載入產品數據】使用新的數據加載器
+      const allProducts = await ProductLoader.loadAllProducts()
+
       collections?.forEach(collection => {
         // 🔍 【查找產品】從產品數據中找到對應產品
-        const product = productsData.find(p => p.id === collection.product_id) as Product | undefined
+        const product = allProducts.find(p => p.id === collection.product_id)
         
         if (product) {
           if (collection.status === 'owned') {
@@ -234,11 +237,12 @@ export class CollectionService {
       }
       
       // 📦 【獲取產品詳情】根據ID獲取完整產品信息
+      const allProducts = await ProductLoader.loadAllProducts()
       const products: Product[] = []
       for (const item of popularityData || []) {
-        const product = productsData.find(p => p.id === item.product_id)
+        const product = allProducts.find(p => p.id === item.product_id)
         if (product) {
-          products.push(product as Product)
+          products.push(product)
         }
       }
       
