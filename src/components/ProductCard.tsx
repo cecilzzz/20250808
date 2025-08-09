@@ -2,7 +2,7 @@
  * ProductCard 組件 - 產品卡片展示組件
  *
  * 🎯 這個組件的工作：
- * 以卡片形式展示單個產品的核心信息
+ * 以卡片形式展示單個產品的核心信息，支援多語言顯示
  *
  * 🚫 這個組件不做什麼：
  * - 不處理產品數據獲取（由父組件提供數據）
@@ -10,23 +10,30 @@
  * - 不處理路由跳轉邏輯（只提供點擊事件）
  *
  * ✅ 只負責：
- * - 展示產品圖片、名稱、價格
- * - 顯示稀有度標識和顏色
+ * - 展示產品圖片、名稱、價格（多語言）
+ * - 顯示稀有度標識和顏色（多語言）
+ * - 根據語言選擇顯示對應的產品名稱
  * - 提供點擊進入詳情的交互
  * - 響應式布局適配
  *
- * 💡 比喻：就像是「商品展示窗」，吸引顧客注意並展示關鍵信息
+ * 💡 比喻：就像是「國際商品展示窗」，用顧客熟悉的語言展示關鍵信息
  */
+
+'use client'
 
 import Image from 'next/image'
 import Link from 'next/link'
 import type { Product } from '@/types/database'
+import { useTranslation } from '@/hooks/useTranslation'
 
 interface ProductCardProps {
   product: Product
 }
 
 export default function ProductCard({ product }: ProductCardProps) {
+  // 🌍 【翻譯功能】獲取翻譯函數和工具
+  const { translateRarity, translateReleaseStatus, formatPrice, t, currentLocale } = useTranslation()
+
   // 🎨 【稀有度顏色映射】根據稀有度返回對應的顏色樣式
   const getRarityColor = (rarity: string) => {
     const colors = {
@@ -39,23 +46,6 @@ export default function ProductCard({ product }: ProductCardProps) {
     return colors[rarity as keyof typeof colors] || colors.normal
   }
 
-  // 🎨 【稀有度標籤】顯示友好的稀有度名稱
-  const getRarityLabel = (rarity: string) => {
-    const labels = {
-      normal: '普通',
-      rare: '稀有',
-      super_rare: '超稀有',
-      hidden: '隱藏',
-      sp: 'SP'
-    }
-    return labels[rarity as keyof typeof labels] || '未知'
-  }
-
-  // 💰 【價格格式化】格式化價格顯示
-  const formatPrice = (price: number) => {
-    return `NT$ ${price.toLocaleString()}`
-  }
-
   return (
     <Link 
       href={`/products/${product.id}`}
@@ -63,18 +53,27 @@ export default function ProductCard({ product }: ProductCardProps) {
     >
       {/* 📸 【產品圖片區域】*/}
       <div className="relative aspect-square bg-gray-50">
-        <Image
-          src={product.imageUrl}
-          alt={product.name}
-          fill
-          className="object-cover group-hover:scale-105 transition-transform duration-200"
-          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
-        />
+        {product.imageUrl && product.imageUrl.trim() !== '' ? (
+          <Image
+            src={product.imageUrl}
+            alt={product.name}
+            fill
+            className="object-cover group-hover:scale-105 transition-transform duration-200"
+            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+          />
+        ) : (
+          <div className="w-full h-full flex items-center justify-center bg-gray-100">
+            <div className="text-center">
+              <div className="text-4xl mb-2">🐰</div>
+              <p className="text-xs text-gray-500">{t('product.noImage')}</p>
+            </div>
+          </div>
+        )}
         
         {/* 🎨 【稀有度標籤】右上角顯示稀有度 */}
         <div className="absolute top-2 right-2">
           <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium border ${getRarityColor(product.rarityLevel)}`}>
-            {getRarityLabel(product.rarityLevel)}
+            {translateRarity(product.rarityLevel)}
           </span>
         </div>
 
@@ -82,9 +81,7 @@ export default function ProductCard({ product }: ProductCardProps) {
         {product.releaseStatus !== 'active' && (
           <div className="absolute bottom-2 left-2">
             <span className="inline-flex items-center px-2 py-1 rounded-md text-xs font-medium bg-red-100 text-red-800 border border-red-200">
-              {product.releaseStatus === 'discontinued' && '停產'}
-              {product.releaseStatus === 'preorder' && '預購'}
-              {product.releaseStatus === 'limited' && '限量'}
+              {translateReleaseStatus(product.releaseStatus)}
             </span>
           </div>
         )}
@@ -101,8 +98,8 @@ export default function ProductCard({ product }: ProductCardProps) {
 
         {/* 🏷️ 【產品名稱】*/}
         <h3 className="text-lg font-semibold text-gray-900 mb-2 line-clamp-2 group-hover:text-blue-600 transition-colors">
-          {product.name}
-          {product.nameEn && (
+          {currentLocale === 'en' && product.nameEn ? product.nameEn : product.name}
+          {currentLocale === 'zh-TW' && product.nameEn && (
             <span className="block text-sm font-normal text-gray-500 mt-1">
               {product.nameEn}
             </span>
@@ -127,7 +124,7 @@ export default function ProductCard({ product }: ProductCardProps) {
             <div 
               className="w-4 h-4 rounded-full border border-gray-200"
               style={{ backgroundColor: product.mainColor }}
-              title={`主色調: ${product.mainColor}`}
+              title={`${t('product.mainColor')}: ${product.mainColor}`}
             />
           </div>
         </div>
@@ -136,7 +133,7 @@ export default function ProductCard({ product }: ProductCardProps) {
         {product.appearanceRate && (
           <div className="mt-2 pt-2 border-t border-gray-100">
             <span className="text-xs text-gray-500">
-              出現率: {product.appearanceRate}
+              {t('product.appearanceRate')}: {product.appearanceRate}
             </span>
           </div>
         )}

@@ -23,7 +23,9 @@
 import Link from 'next/link'
 import { useState } from 'react'
 import { useAuth } from '@/contexts/AuthContext'
+import { useTranslation } from '@/hooks/useTranslation'
 import AuthModal from './AuthModal'
+import LanguageSwitcher from './LanguageSwitcher'
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
@@ -32,6 +34,9 @@ export default function Header() {
   
   // 🔧 【認證 Hook】
   const { user, signOut, loading } = useAuth()
+  
+  // 🌍 【翻譯 Hook】
+  const { t } = useTranslation()
 
   // 🔄 【登出處理】
   const handleSignOut = async () => {
@@ -68,24 +73,26 @@ export default function Header() {
               href="/" 
               className="text-gray-700 hover:text-blue-600 px-3 py-2 text-sm font-medium transition-colors"
             >
-              所有產品
+              {t('navigation.products')}
             </Link>
             <Link 
               href="/collections" 
               className="text-gray-700 hover:text-blue-600 px-3 py-2 text-sm font-medium transition-colors"
             >
-              我的收藏
+              {t('navigation.collections')}
             </Link>
             <Link 
               href="/series" 
               className="text-gray-700 hover:text-blue-600 px-3 py-2 text-sm font-medium transition-colors"
             >
-              系列分類
+              {t('navigation.series')}
             </Link>
           </nav>
 
           {/* 👤 【用戶區域】右側用戶操作 */}
           <div className="flex items-center space-x-4">
+            {/* 🌍 【語言切換器】*/}
+            <LanguageSwitcher variant="compact" className="hidden sm:block" />
             {/* 🔍 【搜索按鈕】*/}
             <button className="text-gray-500 hover:text-gray-700 transition-colors">
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -111,7 +118,7 @@ export default function Header() {
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                   </svg>
                   <span className="hidden sm:block text-sm">
-                    {user.user_metadata?.username || user.email?.split('@')[0] || '用戶'}
+                    {user.user_metadata?.username || user.email?.split('@')[0] || t('ui.user')}
                   </span>
                 </button>
                 
@@ -122,13 +129,13 @@ export default function Header() {
                       href="/collections"
                       className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors"
                     >
-                      我的收藏
+                      {t('navigation.myCollections')}
                     </Link>
                     <Link 
                       href="/profile"
                       className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors"
                     >
-                      個人資料
+                      {t('navigation.profile')}
                     </Link>
                     <hr className="my-1 border-gray-200" />
                     <button
@@ -136,7 +143,7 @@ export default function Header() {
                       disabled={loading}
                       className="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors disabled:opacity-50"
                     >
-                      {loading ? '登出中...' : '登出'}
+                      {loading ? t('ui.signingOut') : t('ui.signOut')}
                     </button>
                   </div>
                 </div>
@@ -148,13 +155,13 @@ export default function Header() {
                   onClick={() => openAuthModal('signin')}
                   className="text-gray-700 hover:text-blue-600 px-3 py-1 text-sm font-medium transition-colors"
                 >
-                  登錄
+                  {t('ui.signIn')}
                 </button>
                 <button
                   onClick={() => openAuthModal('signup')}
                   className="bg-blue-600 text-white hover:bg-blue-700 px-4 py-2 rounded-md text-sm font-medium transition-colors"
                 >
-                  註冊
+                  {t('ui.signUp')}
                 </button>
               </div>
             )}

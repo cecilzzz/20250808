@@ -29,6 +29,7 @@ import Header from '@/components/Header'
 import ProductCard from '@/components/ProductCard'
 import CollectionButton from '@/components/CollectionButton'
 import { useAuth } from '@/contexts/AuthContext'
+import { useTranslation } from '@/hooks/useTranslation'
 import type { Product, ProductDetailResponse } from '@/types/database'
 
 export default function ProductDetailPage() {
@@ -43,6 +44,9 @@ export default function ProductDetailPage() {
 
   // 🔧 【認證 Hook】
   const { user } = useAuth()
+  
+  // 🌍 【翻譯 Hook】
+  const { t } = useTranslation()
 
   // 🔍 【獲取產品詳情】從 API 載入產品詳細信息
   const fetchProductDetail = async () => {
@@ -177,14 +181,23 @@ export default function ProductDetailPage() {
             {/* 📸 【產品圖片】*/}
             <div className="relative">
               <div className="aspect-square relative bg-gray-100 rounded-lg overflow-hidden">
-                <Image
-                  src={product.imageUrl}
-                  alt={product.name}
-                  fill
-                  className="object-cover"
-                  sizes="(max-width: 1024px) 100vw, 50vw"
-                  priority
-                />
+                {product.imageUrl && product.imageUrl.trim() !== '' ? (
+                  <Image
+                    src={product.imageUrl}
+                    alt={product.name}
+                    fill
+                    className="object-cover"
+                    sizes="(max-width: 1024px) 100vw, 50vw"
+                    priority
+                  />
+                ) : (
+                  <div className="w-full h-full flex items-center justify-center">
+                    <div className="text-center">
+                      <div className="text-8xl mb-4">🐰</div>
+                      <p className="text-lg text-gray-500">{t('product.noProductImage')}</p>
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
 

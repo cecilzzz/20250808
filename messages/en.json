@@ -1,0 +1,64 @@
+{
+  "ui": {
+    "loading": "Loading...",
+    "search": "Search",
+    "filter": "Filter",
+    "reset": "Reset",
+    "showMore": "Show More",
+    "showLess": "Show Less",
+    "title": "Labubu Collection",
+    "subtitle": "Discover and collect your favorite Labubu products",
+    "totalProducts": "{{count}} products in total",
+    "user": "User",
+    "signIn": "Sign In",
+    "signUp": "Sign Up",
+    "signOut": "Sign Out",
+    "signingOut": "Signing out...",
+    "pagination": "Pagination navigation",
+    "previousPage": "Previous",
+    "nextPage": "Next"
+  },
+  "rarity": {
+    "normal": "Normal",
+    "rare": "Rare",
+    "super_rare": "Super Rare", 
+    "hidden": "Hidden",
+    "sp": "SP"
+  },
+  "releaseStatus": {
+    "active": "Available",
+    "discontinued": "Discontinued",
+    "preorder": "Pre-order",
+    "limited": "Limited"
+  },
+  "product": {
+    "price": "Price",
+    "currentPrice": "Current Price",
+    "originalPrice": "Original Price",
+    "appearanceRate": "Appearance Rate",
+    "mainColor": "Main Color",
+    "series": "Series",
+    "addToCollection": "Add to Collection",
+    "removeFromCollection": "Remove from Collection",
+    "viewDetails": "View Details",
+    "noImage": "No Image",
+    "noProductImage": "No Product Image"
+  },
+  "collection": {
+    "title": "My Collection",
+    "owned": "Owned",
+    "wanted": "Wanted",
+    "empty": "No products in your collection yet",
+    "startCollecting": "Start Collecting"
+  },
+  "navigation": {
+    "home": "Home",
+    "products": "Products",
+    "collections": "Collections",
+    "series": "Series",
+    "myCollections": "My Collections",
+    "profile": "Profile",
+    "login": "Login",
+    "logout": "Logout"
+  }
+}

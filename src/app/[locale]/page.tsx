@@ -24,8 +24,12 @@ import Header from '@/components/Header'
 import ProductGrid from '@/components/ProductGrid'
 import SearchFilters from '@/components/SearchFilters'
 import { useProducts } from '@/hooks/useProducts'
+import { useTranslation } from '@/hooks/useTranslation'
 
 export default function HomePage() {
+  // 🌍 【翻譯 Hook】
+  const { t } = useTranslation()
+  
   // 🔧 【使用產品數據Hook】獲取所有產品相關數據和操作方法
   const {
     // 📊 數據狀態
@@ -59,13 +63,13 @@ export default function HomePage() {
         {/* 🏷️ 【頁面標題區域】 */}
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-gray-900 mb-2">
-            Labubu 收藏品
+            {t('ui.title')}
           </h1>
           <p className="text-gray-600">
-            發現並收藏你喜愛的 Labubu 產品
+            {t('ui.subtitle')}
             {!loading && totalProducts > 0 && (
               <span className="ml-2 text-sm text-gray-500">
-                共 {totalProducts} 個產品
+                {t('ui.totalProducts', { count: totalProducts })}
               </span>
             )}
           </p>
@@ -89,7 +93,7 @@ export default function HomePage() {
         {/* 📄 【分頁導航區域】頁碼控制 */}
         {!loading && !error && totalPages > 1 && (
           <div className="mt-12 flex justify-center">
-            <nav className="inline-flex rounded-md shadow-sm" aria-label="分頁導航">
+            <nav className="inline-flex rounded-md shadow-sm" aria-label={t('ui.pagination')}>
               
               {/* ⬅️ 【上一頁按鈕】 */}
               <button
@@ -97,7 +101,7 @@ export default function HomePage() {
                 disabled={currentPage <= 1}
                 className="relative inline-flex items-center px-4 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                上一頁
+                {t('ui.previousPage')}
               </button>
               
               {/* 🔢 【頁碼按鈕組】顯示最多5個頁碼 */}
@@ -124,7 +128,7 @@ export default function HomePage() {
                 disabled={currentPage >= totalPages}
                 className="relative inline-flex items-center px-4 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                下一頁
+                {t('ui.nextPage')}
               </button>
               
             </nav>

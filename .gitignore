@@ -41,6 +41,5 @@ yarn-error.log*
 next-env.d.ts
 
 # project documentation
-LABUBU_*.md
-*_LOG.md
-*_REFERENCE.md
+*_WORKLOG.md
+
